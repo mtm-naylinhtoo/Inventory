@@ -1,0 +1,17 @@
+﻿@model Inventory.Models.User
+
+@using (Html.BeginForm())
+{
+    @Html.LabelFor(model => model.Email)
+    @Html.TextBoxFor(model => model.Email)
+
+    @Html.LabelFor(model => model.Password)
+    @Html.PasswordFor(model => model.Password)
+
+    <input type="submit" value="Login" />
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <p>@ViewBag.ErrorMessage</p>
+}
