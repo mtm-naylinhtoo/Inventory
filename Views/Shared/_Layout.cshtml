@@ -7,9 +7,21 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Inventory Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        .black-pagination .page-item .page-link {
+            color: black;
+        }
+
+        .black-pagination .page-item.active .page-link {
+            background-color: black;
+            border-color: black;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
@@ -21,22 +33,39 @@
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link" })
+                    </li>
                 </ul>
             </div>
             @if (currentUser != null)
             {
-                <p class="text-light">Welcome, @userName</p>
+                <form id="changePasswordForm" action="@Url.Action("Changepassword", "Users")" method="get">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn text-white">Change Password</button>
+                </form>
+                <form id="logoutForm" action="@Url.Action("Logout", "Users")" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn text-white">Logout</button>
+                </form>
+            }
+            else
+            {
+                <form id="loginForm" action="@Url.Action("Login", "Users")" method="get">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn text-white">Login</button>
+                </form>
             }
         </div>
     </nav>
-    <div class="container body-content">
+    <div class="container body-content mt-4">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Inventory Application</p>
         </footer>
     </div>
 

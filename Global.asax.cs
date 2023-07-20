@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Inventory.Mailers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,6 +17,10 @@ namespace Inventory
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            var mailHogHost = "localhost";
+            var mailHogPort = 1025; // The default MailHog SMTP port
+            EmailService emailService = new EmailService(mailHogHost, mailHogPort);
+            HttpContext.Current.Application["EmailService"] = emailService;
         }
     }
 }

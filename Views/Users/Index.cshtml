@@ -1,72 +1,119 @@
-﻿@model IEnumerable<Inventory.Models.User>
-
+﻿@model PagedList.IPagedList<Inventory.Models.User>
+@using PagedList;
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
 }
 
-@if (ViewBag.currentUser != null)
-{
-    <h2>Welcome, @ViewBag.currentUser.FirstName</h2>
-}
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Mobile)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DOB)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Role)
-        </th>
-        <th>
-            Active
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+<div class="container mt-2">
+    @if (ViewBag.currentUser != null)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mobile)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DOB)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
+        <h2 class="mb-4">Welcome, @ViewBag.currentUser.FirstName</h2>
     }
 
-</table>
+    <p>
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-outline-dark" })
+    </p>
+
+    @using (Html.BeginForm("Index", "Users", FormMethod.Get))
+    {
+        <div class="form-row mb-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    @Html.TextBox("search", Request.QueryString["search"], new { @class = "form-control", placeholder = "Search by name or email" })
+                    <div class="form-check mt-1 mx-2">
+                        @Html.CheckBox("showDeleted", Request.QueryString["showDeleted"] == "true", new { @class = "form-check-input", id = "showDeleted" })
+                        <label class="form-check-label" for="showDeleted">Deleted</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-dark mx-2">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>DOB</th>
+                    <th>Role</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Mobile)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DOB)</td>
+                        <td>
+                            @{
+                                if (item.Role == 0)
+                                {
+                                    <text>Admin</text>;
+                                }
+                                else if (item.Role == 1)
+                                {
+                                    <text>Sales</text>;
+                                }
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-dark btn-sm" }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-dark btn-sm" }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-dark btn-sm" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (Model.Count > 0)
+    {
+        <div class="d-flex justify-content-center black-pagination">
+            <ul class="pagination">
+                @if (Model.PageNumber != 1)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("First", "Index", new { page = 1, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("Previous", "Index", new { page = Model.PageNumber - 1, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        @Html.ActionLink(i.ToString(), "Index", new { page = i, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("Next", "Index", new { page = Model.PageNumber + 1, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+                @if (Model.PageNumber != Model.PageCount)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("Last", "Index", new { page = Model.PageCount, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
