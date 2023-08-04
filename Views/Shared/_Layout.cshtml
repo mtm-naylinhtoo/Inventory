@@ -10,8 +10,19 @@
     <title>@ViewBag.Title - Inventory Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
         .black-pagination .page-item .page-link {
             color: black;
         }
@@ -21,36 +32,95 @@
             border-color: black;
             color: white;
         }
+
+        .custom-link {
+            color: white;
+        }
+
+        .settings-active {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
-            @Html.ActionLink("Inventory", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("Inventory", "Index", "Home", new { area = "" }, new { @class = "navbar-brand mb-1" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item">
-                        @Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link" })
-                    </li>
-                </ul>
-            </div>
             @if (currentUser != null)
             {
-                <form id="changePasswordForm" action="@Url.Action("Changepassword", "Users")" method="get">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn text-white">Change Password</button>
-                </form>
-                <form id="logoutForm" action="@Url.Action("Logout", "Users")" method="post">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn text-white">Logout</button>
-                </form>
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            @Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link custom-link" })
+                        </li>
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <button class="btn btn-dark dropdown-toggle pt-2" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Settings
+                                </button>
+                                <ul class="dropdown-menu" id="navDropdownMenu" aria-labelledby="menuDropdown">
+                                    <li>
+                                        @Html.ActionLink("States", "Index", "States", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Cities", "Index", "Cities", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Townships", "Index", "Townships", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Suppliers", "Index", "Suppliers", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Customers", "Index", "Customers", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <button class="btn btn-dark dropdown-toggle pt-2" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Stock
+                                </button>
+                                <ul class="dropdown-menu" id="navDropdownMenu" aria-labelledby="menuDropdown">
+                                    <li>
+                                        @Html.ActionLink("Categories", "Index", "Categories", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Products", "Index", "Products", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Welcome, @currentUser.FirstName
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li>
+                            <a class="dropdown-item custom-btn" href="@Url.Action("Details", "Users", new { id = currentUser.Id })">View Profile</a>
+                        </li>
+                        <li>
+                            <form id="changePasswordForm" action="@Url.Action("Changepassword", "Users")" method="get">
+                                @Html.AntiForgeryToken()
+                                <button class="dropdown-item custom-btn" type="submit">Change Password</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form id="logoutForm" action="@Url.Action("Logout", "Users")" method="post">
+                                @Html.AntiForgeryToken()
+                                <button class="dropdown-item custom-btn" type="submit">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             }
             else
             {
@@ -74,3 +144,13 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+<script>
+    var currentUrl = window.location.pathname;
+
+    $("#navDropdownMenu a").each(function () {
+        var href = $(this).attr("href");
+        if (href && currentUrl!='/' && href.includes(currentUrl)) {
+            $(this).parent("li").addClass("settings-active");
+        }
+    });
+</script>

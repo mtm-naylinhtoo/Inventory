@@ -1,0 +1,164 @@
+﻿@model Inventory.Models.Customer
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="container mt-2">
+    <h2>Create Customer</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="card">
+            <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        State
+                    </div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.StateId, ViewBag.States as SelectList, "Select State", new { @class = "form-control", id = "stateSelect" })
+                        @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        City
+                    </div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.CityId, ViewBag.Cities as SelectList, "Select City", new { @class = "form-control", id = "citySelect" })
+                        @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        Township
+                    </div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.TownshipId, ViewBag.Townships as SelectList, "Select Township", new { @class = "form-control", id = "townshipSelect" })
+                        @Html.ValidationMessageFor(model => model.TownshipId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", placeholder = "Code" } })
+                        @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Name" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        @Html.LabelFor(model => model.Mobile, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { @class = "form-control", placeholder = "Mobile" } })
+                        @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Address" } })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-dark" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <p>
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "mt-2 btn btn-outline-dark" })
+    </p>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        // Function to fetch cities based on the selected state
+        function getCitiesByState(stateId) {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetCitiesByState", "Customers")',
+                data: { stateId: stateId },
+                success: function (data) {
+                    // Clear the previous options and add new options for cities
+                    var citySelect = $("#citySelect");
+                    citySelect.empty();
+                    var selected_city = data[0].Value;
+                    $.each(data, function (i, city) {
+                        citySelect.append($('<option></option>').val(city.Value).html(city.Text));
+                    });
+                    getTownshipsByCity(selected_city);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // Function to fetch townships based on the selected city
+        function getTownshipsByCity(cityId) {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetTownshipsByCity", "Customers")',
+                data: { cityId: cityId },
+                success: function (data) {
+                    // Clear the previous options and add new options for townships
+                    var townshipSelect = $("#townshipSelect");
+                    townshipSelect.empty();
+                    $.each(data, function (i, township) {
+                        townshipSelect.append($('<option></option>').val(township.Value).html(township.Text));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // On document ready, fetch cities based on the selected state (if any)
+        $(document).ready(function () {
+            var selectedStateId = $("#stateSelect").val();
+            getCitiesByState(selectedStateId);
+        });
+
+        // On change of the state dropdown, fetch cities based on the selected state
+        $("#stateSelect").change(function () {
+            var selectedStateId = $(this).val();
+            getCitiesByState(selectedStateId);
+        });
+
+        // On change of the city dropdown, fetch townships based on the selected city
+        $("#citySelect").change(function () {
+            var selectedCityId = $(this).val();
+            getTownshipsByCity(selectedCityId);
+        });
+    </script>
+}

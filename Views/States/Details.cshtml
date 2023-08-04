@@ -1,4 +1,5 @@
-﻿@model Inventory.ViewModels.UserDetailViewModel
+﻿@model Inventory.ViewModels.StateDetailViewModel
+
 @{
     ViewBag.Title = "Details";
 }
@@ -7,65 +8,30 @@
     <div class="col-md-6">
         <div class="card mb-3">
             <div class="card-body">
-                <h4 class="card-title">User Information</h4>
+                <h4 class="card-title">State Information</h4>
                 <hr />
                 <div class="row">
                     <div class="col-md-4">
-                        <label>First Name:</label>
+                        <label>Code:</label>
                     </div>
                     <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.User.FirstName)</p>
+                        <p>@Html.DisplayFor(model => model.State.Code)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <label>Last Name:</label>
+                        <label>Name:</label>
                     </div>
                     <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.User.LastName)</p>
+                        <p>@Html.DisplayFor(model => model.State.Name)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <label>Email:</label>
+                        <label>Sort Order:</label>
                     </div>
                     <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.User.Email)</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>Mobile:</label>
-                    </div>
-                    <div class="col-md-8">
-                        <p><a href="tel:model.User.Mobile">@Model.User.Mobile</a></p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>Date of Birth:</label>
-                    </div>
-                    <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.User.DOB)</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>Role:</label>
-                    </div>
-                    <div class="col-md-8">
-                        <p>
-                            @{
-                                if (Model.User.Role == 0)
-                                {
-                                    <text>Admin</text>;
-                                }
-                                else if (Model.User.Role == 1)
-                                {
-                                    <text>Sales</text>;
-                                }
-                            }
-                        </p>
+                        <p>@Html.DisplayFor(model => model.State.SortOrder)</p>
                     </div>
                 </div>
                 <div class="row">
@@ -73,7 +39,7 @@
                         <label>Is Active:</label>
                     </div>
                     <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.User.IsActive)</p>
+                        <p>@Html.DisplayFor(model => model.State.IsActive)</p>
                     </div>
                 </div>
                 <div class="row">
@@ -81,7 +47,7 @@
                         <label>Is Deleted:</label>
                     </div>
                     <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.User.IsDeleted)</p>
+                        <p>@Html.DisplayFor(model => model.State.IsDeleted)</p>
                     </div>
                 </div>
                 <div class="row">
@@ -89,7 +55,7 @@
                         <label>Created Date:</label>
                     </div>
                     <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.User.CreatedDate)</p>
+                        <p>@Html.DisplayFor(model => model.State.CreatedDate)</p>
                     </div>
                 </div>
                 <div class="row">
@@ -100,14 +66,14 @@
                         <p>@Model.CreatedUserName</p>
                     </div>
                 </div>
-                @if (Model.User.UpdatedDate != null)
+                @if (Model.State.UpdatedDate != null)
                 {
                     <div class="row">
                         <div class="col-md-4">
                             <label>Updated Date:</label>
                         </div>
                         <div class="col-md-8">
-                            <p>@Html.DisplayFor(model => model.User.UpdatedDate)</p>
+                            <p>@Html.DisplayFor(model => model.State.UpdatedDate)</p>
                         </div>
                     </div>
                     <div class="row">
@@ -119,19 +85,19 @@
                         </div>
                     </div>
                 }
-                @if (Model.User.DeletedDate != null)
+                @if (Model.State.DeletedDate != null)
                 {
                     <div class="row">
                         <div class="col-md-4">
                             <label>Deleted Date:</label>
                         </div>
                         <div class="col-md-8">
-                            <p>@Html.DisplayFor(model => model.User.DeletedDate)</p>
+                            <p>@Html.DisplayFor(model => model.State.DeletedDate)</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Deleted User ID:</label>
+                            <label>Deleted User:</label>
                         </div>
                         <div class="col-md-8">
                             <p>@Model.DeletedUserName</p>
@@ -144,6 +110,6 @@
 </div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }, new { @class = "btn btn-dark" }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.State.ID }, new { @class = "btn btn-dark" }) |
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-dark" })
 </p>

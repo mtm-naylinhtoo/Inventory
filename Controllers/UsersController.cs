@@ -42,7 +42,7 @@ namespace Inventory.Controllers
             if (user != null && BCrypt.Net.BCrypt.Verify(password, user.HashedPassword))
             {
                 Session["CurrentUser"] = user;
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             else
             {

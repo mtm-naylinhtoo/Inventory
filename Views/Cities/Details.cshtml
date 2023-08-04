@@ -1,0 +1,121 @@
+﻿@model Inventory.ViewModels.CityDetailViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container mt-2">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4 class="card-title">City Information</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <label>State:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.City.State.Name)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Code:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.City.Code)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Name:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.City.Name)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Sort Order:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.City.SortOrder)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Is Active:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.City.IsActive)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Is Deleted:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.City.IsDeleted)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Created Date:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.City.CreatedDate)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Created User:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.CreatedUserName</p>
+                </div>
+            </div>
+            @if (Model.City.UpdatedDate != null)
+            {
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Updated Date:</label>
+                    </div>
+                    <div class="col-md-8">
+                        <p>@Html.DisplayFor(model => model.City.UpdatedDate)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Updated User:</label>
+                    </div>
+                    <div class="col-md-8">
+                        <p>@Model.UpdatedUserName</p>
+                    </div>
+                </div>
+            }
+            @if (Model.City.DeletedDate != null)
+            {
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Deleted Date:</label>
+                    </div>
+                    <div class="col-md-8">
+                        <p>@Html.DisplayFor(model => model.City.DeletedDate)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Deleted User:</label>
+                    </div>
+                    <div class="col-md-8">
+                        <p>@Model.DeletedUserName</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.City.ID }, new { @class = "btn btn-dark" }) |
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-dark" })
+    </p>
+</div>
