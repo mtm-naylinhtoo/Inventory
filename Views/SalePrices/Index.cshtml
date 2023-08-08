@@ -1,0 +1,103 @@
+﻿@model PagedList.IPagedList<Inventory.Models.SalePrice>
+
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Sale Prices";
+}
+
+<div class="container mt-2">
+    <h2 class="mb-4">Sale Prices</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-outline-dark" })
+    </p>
+
+    @using (Html.BeginForm("Index", "SalePrices", FormMethod.Get))
+    {
+        <div class="form-row mb-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    @Html.TextBox("search", Request.QueryString["search"], new { @class = "form-control", placeholder = "Search by price" })
+                    <div class="form-check mt-1 mx-2">
+                        @Html.CheckBox("showDeleted", Request.QueryString["showDeleted"] == "true", new { @class = "form-check-input", id = "showDeleted" })
+                        <label class="form-check-label" for="showDeleted">Deleted</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-dark mx-2">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Active</th>
+                    <th>Created Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var salePrice in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => salePrice.Category.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => salePrice.Product.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => salePrice.Price)</td>
+                        <td>@Html.DisplayFor(modelItem => salePrice.IsActive)</td>
+                        <td>@Html.DisplayFor(modelItem => salePrice.CreatedDate)</td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = salePrice.ID }, new { @class = "btn btn-dark btn-sm" }) |
+                            @Html.ActionLink("Details", "Details", new { id = salePrice.ID }, new { @class = "btn btn-dark btn-sm" }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = salePrice.ID }, new { @class = "btn btn-dark btn-sm" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (Model.Count > 0)
+    {
+        <div class="d-flex justify-content-center black-pagination">
+            <ul class="pagination">
+                @if (Model.PageNumber != 1)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("First", "Index", new { page = 1, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("Previous", "Index", new { page = Model.PageNumber - 1, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        @Html.ActionLink(i.ToString(), "Index", new { page = i, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("Next", "Index", new { page = Model.PageNumber + 1, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+                @if (Model.PageNumber != Model.PageCount)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("Last", "Index", new { page = Model.PageCount, search = ViewBag.Search, showDeleted = ViewBag.ShowDeleted }, new { @class = "page-link" })
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>

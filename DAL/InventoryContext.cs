@@ -20,6 +20,7 @@ namespace Inventory.DAL
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<SalePrice> SalePrices { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
@@ -62,7 +63,21 @@ namespace Inventory.DAL
                 .HasRequired(c => c.Township)
                 .WithMany()
                 .HasForeignKey(c => c.TownshipId)
+                .WillCascadeOnDelete(true);
+
+            // for SalePrice
+
+            modelBuilder.Entity<SalePrice>()
+                .HasRequired(c => c.Category)
+                .WithMany()
+                .HasForeignKey(c => c.CategoryId)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<SalePrice>()
+                .HasRequired(c => c.Product)
+                .WithMany()
+                .HasForeignKey(c => c.ProductId)
+                .WillCascadeOnDelete(true);
         }
 
         public System.Data.Entity.DbSet<Inventory.Models.Customer> Customers { get; set; }

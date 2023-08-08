@@ -188,6 +188,7 @@
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\SalePricesController.cs" />
     <Compile Include="Controllers\StatesController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\TownshipsController.cs" />
@@ -223,11 +224,16 @@
     <Compile Include="Migrations\202308040755243_AddCategoryIdInProduct.designer.cs">
       <DependentUpon>202308040755243_AddCategoryIdInProduct.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308071324405_AddSalePrice.cs" />
+    <Compile Include="Migrations\202308071324405_AddSalePrice.designer.cs">
+      <DependentUpon>202308071324405_AddSalePrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\City.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\SalePrice.cs" />
     <Compile Include="Models\State.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\Township.cs" />
@@ -239,6 +245,7 @@
     <Compile Include="ViewModels\CustomerDetailViewModel.cs" />
     <Compile Include="ViewModels\ProductDetailViewModel.cs" />
     <Compile Include="ViewModels\ResetPasswordViewModel.cs" />
+    <Compile Include="ViewModels\SalePriceDetailViewModel.cs" />
     <Compile Include="ViewModels\StateDetailViewModel.cs" />
     <Compile Include="ViewModels\SupplierDetailViewModel.cs" />
     <Compile Include="ViewModels\TownshipDetailViewModel.cs" />
@@ -341,6 +348,11 @@
     <Content Include="Views\Products\Details.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\SalePrices\Create.cshtml" />
+    <Content Include="Views\SalePrices\Delete.cshtml" />
+    <Content Include="Views\SalePrices\Details.cshtml" />
+    <Content Include="Views\SalePrices\Edit.cshtml" />
+    <Content Include="Views\SalePrices\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -390,6 +402,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308040755243_AddCategoryIdInProduct.resx">
       <DependentUpon>202308040755243_AddCategoryIdInProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308071324405_AddSalePrice.resx">
+      <DependentUpon>202308071324405_AddSalePrice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

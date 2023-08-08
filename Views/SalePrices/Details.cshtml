@@ -1,4 +1,4 @@
-﻿@model Inventory.ViewModels.ProductDetailViewModel
+﻿@model Inventory.ViewModels.SalePriceDetailViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -7,38 +7,30 @@
 <div class="container mt-2">
     <div class="card mb-3">
         <div class="card-body">
-            <h4 class="card-title">Product Information</h4>
+            <h4 class="card-title">Sale Price Information</h4>
             <hr />
             <div class="row">
                 <div class="col-md-4">
                     <label>Category:</label>
                 </div>
                 <div class="col-md-8">
-                    <p>@Html.DisplayFor(model => model.Product.Category.Name)</p>
+                    <p>@Html.DisplayFor(model => model.SalePrice.Category.Name)</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <label>Code:</label>
+                    <label>Product:</label>
                 </div>
                 <div class="col-md-8">
-                    <p>@Html.DisplayFor(model => model.Product.Code)</p>
+                    <p>@Html.DisplayFor(model => model.SalePrice.Product.Name)</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <label>Name:</label>
+                    <label>Price:</label>
                 </div>
                 <div class="col-md-8">
-                    <p>@Html.DisplayFor(model => model.Product.Name)</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <label>Sort Order:</label>
-                </div>
-                <div class="col-md-8">
-                    <p>@Html.DisplayFor(model => model.Product.SortOrder)</p>
+                    <p>@Html.DisplayFor(model => model.SalePrice.Price)</p>
                 </div>
             </div>
             <div class="row">
@@ -46,7 +38,7 @@
                     <label>Is Active:</label>
                 </div>
                 <div class="col-md-8">
-                    <p>@Html.DisplayFor(model => model.Product.IsActive)</p>
+                    <p>@Html.DisplayFor(model => model.SalePrice.IsActive)</p>
                 </div>
             </div>
             <div class="row">
@@ -54,7 +46,7 @@
                     <label>Is Deleted:</label>
                 </div>
                 <div class="col-md-8">
-                    <p>@Html.DisplayFor(model => model.Product.IsDeleted)</p>
+                    <p>@Html.DisplayFor(model => model.SalePrice.IsDeleted)</p>
                 </div>
             </div>
             <div class="row">
@@ -62,7 +54,7 @@
                     <label>Created Date:</label>
                 </div>
                 <div class="col-md-8">
-                    <p>@Html.DisplayFor(model => model.Product.CreatedDate)</p>
+                    <p>@Html.DisplayFor(model => model.SalePrice.CreatedDate)</p>
                 </div>
             </div>
             <div class="row">
@@ -73,14 +65,14 @@
                     <p>@Model.CreatedUserName</p>
                 </div>
             </div>
-            @if (Model.Product.UpdatedDate != null)
+            @if (Model.SalePrice.UpdatedDate != null)
             {
                 <div class="row">
                     <div class="col-md-4">
                         <label>Updated Date:</label>
                     </div>
                     <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.Product.UpdatedDate)</p>
+                        <p>@Html.DisplayFor(model => model.SalePrice.UpdatedDate)</p>
                     </div>
                 </div>
                 <div class="row">
@@ -92,14 +84,14 @@
                     </div>
                 </div>
             }
-            @if (Model.Product.DeletedDate != null)
+            @if (Model.SalePrice.DeletedDate != null)
             {
                 <div class="row">
                     <div class="col-md-4">
                         <label>Deleted Date:</label>
                     </div>
                     <div class="col-md-8">
-                        <p>@Html.DisplayFor(model => model.Product.DeletedDate)</p>
+                        <p>@Html.DisplayFor(model => model.SalePrice.DeletedDate)</p>
                     </div>
                 </div>
                 <div class="row">
@@ -115,7 +107,7 @@
     </div>
 
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Product.ID }, new { @class = "btn btn-dark" }) |
+        @Html.ActionLink("Edit", "Edit", new { id = Model.SalePrice.ID }, new { @class = "btn btn-dark" }) |
         @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-dark" })
     </p>
 </div>
