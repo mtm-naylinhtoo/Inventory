@@ -58,6 +58,9 @@
                             @Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link custom-link" })
                         </li>
                         <li class="nav-item">
+                            @Html.ActionLink("Purchase", "Index", "StockPurchases", new { area = "" }, new { @class = "nav-link custom-link" })
+                        </li>
+                        <li class="nav-item">
                             <div class="dropdown">
                                 <button class="btn btn-dark dropdown-toggle pt-2" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     Settings
@@ -95,6 +98,9 @@
                                     </li>
                                     <li>
                                         @Html.ActionLink("Sale Prices", "Index", "SalePrices", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Stock Balance", "Index", "StockBalances", new { area = "" }, new { @class = "dropdown-item custom-btn" })
                                     </li>
                                 </ul>
                             </div>

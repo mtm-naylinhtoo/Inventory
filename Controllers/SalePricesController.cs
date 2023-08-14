@@ -186,8 +186,8 @@ namespace Inventory.Controllers
                 var currentUser = (User)Session["CurrentUser"];
 
                 // Check if there is already a sale price for the given ProductId, excluding the current sale price being edited
-                var existingSalePrice = db.SalePrices.FirstOrDefault(s => s.ProductId == salePrice.ProductId && s.ID != salePrice.ID && !s.IsDeleted);
-                if (existingSalePrice != null)
+                var existingSalePrice = db.SalePrices.FirstOrDefault(s => s.ProductId == salePrice.ProductId && !s.IsDeleted);
+                if (existingSalePrice != null && existingSalePrice.ID != salePrice.ID)
                 {
                     ModelState.AddModelError("", "A sale price already exists for this product.");
                     // Fetch categories and products for the dropdowns

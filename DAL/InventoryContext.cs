@@ -21,6 +21,12 @@ namespace Inventory.DAL
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<SalePrice> SalePrices { get; set; }
+        public DbSet<StockBalance> StockBalances { get; set; }
+        public DbSet<AutoGenerate> AutoGenerates { get; set; }
+        public DbSet<StockSale> StockSales { get; set; }
+        public DbSet<StockSaleDetail> StockSaleDetails { get; set; }
+        public DbSet<StockPurchase> StockPurchases { get; set; }
+        public DbSet<StockPurchaseDetail> StockPurchaseDetails { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
@@ -74,6 +80,34 @@ namespace Inventory.DAL
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<SalePrice>()
+                .HasRequired(c => c.Product)
+                .WithMany()
+                .HasForeignKey(c => c.ProductId)
+                .WillCascadeOnDelete(true);
+
+            // for StockBalance
+
+            modelBuilder.Entity<StockBalance>()
+                .HasRequired(c => c.Category)
+                .WithMany()
+                .HasForeignKey(c => c.CategoryId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StockBalance>()
+                .HasRequired(c => c.Product)
+                .WithMany()
+                .HasForeignKey(c => c.ProductId)
+                .WillCascadeOnDelete(true);
+
+            // for StockPurchaseDetail
+
+            modelBuilder.Entity<StockPurchaseDetail>()
+                .HasRequired(c => c.Category)
+                .WithMany()
+                .HasForeignKey(c => c.CategoryId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StockPurchaseDetail>()
                 .HasRequired(c => c.Product)
                 .WithMany()
                 .HasForeignKey(c => c.ProductId)

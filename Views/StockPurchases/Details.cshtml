@@ -1,0 +1,173 @@
+﻿@model Inventory.ViewModels.StockPurchaseDetailViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container mt-2">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">Stock Purchase Information</h4>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Stock Purchase Number:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>@Html.DisplayFor(model => model.StockPurchase.StockPurchaseNo)</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Supplier:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>@Html.DisplayFor(model => model.StockPurchase.Supplier.Name)</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Total Amount:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>@Html.DisplayFor(model => model.StockPurchase.TotalAmount)</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Discount Percent:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>@Html.DisplayFor(model => model.StockPurchase.DiscountPercent)</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Discount Amount:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>@Html.DisplayFor(model => model.StockPurchase.DiscountAmount)</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Net Amount:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>@Html.DisplayFor(model => model.StockPurchase.NetAmount)</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">Audit Information</h4>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Created Date:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>@Html.DisplayFor(model => model.StockPurchase.CreatedDate)</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Created By:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <p>@Html.DisplayFor(model => model.CreatedUserName)</p>
+                        </div>
+                    </div>
+                    @if (Model.StockPurchase.UpdatedDate != null)
+                    {
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Updated Date:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <p>@Html.DisplayFor(model => model.StockPurchase.UpdatedDate)</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Updated By:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <p>@Html.DisplayFor(model => model.UpdatedUserName)</p>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.StockPurchase.IsDeleted)
+                    {
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Deleted Date:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <p>@Html.DisplayFor(model => model.StockPurchase.DeletedDate)</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Deleted By:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <p>@Html.DisplayFor(model => model.DeletedUserName)</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row p-2">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h4 class="card-title">Stock Purchase Details</h4>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detail in Model.StockPurchaseDetails)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => detail.Category.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => detail.Product.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => detail.Quantity)</td>
+                                    <td>@Html.DisplayFor(modelItem => detail.Price)</td>
+                                    <td>@Html.DisplayFor(modelItem => detail.Amount)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="pb-3">
+        @Html.ActionLink("Edit", "Edit", new { id = Model.StockPurchase.ID }, new { @class = "btn btn-dark" }) |
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-dark" })
+    </p>
+    @using (Html.BeginForm("Delete", "StockPurchases", new { id = Model.StockPurchase.ID }, FormMethod.Post))
+    {
+        <h3>Deleted this Stock Purchase.</h3>
+        <p>It will undo the stock balance associated with this purchase.</p>
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Purchase?')">Delete</button>
+    }
+</div>

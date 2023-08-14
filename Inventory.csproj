@@ -190,6 +190,8 @@
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\SalePricesController.cs" />
     <Compile Include="Controllers\StatesController.cs" />
+    <Compile Include="Controllers\StockBalancesController.cs" />
+    <Compile Include="Controllers\StockPurchasesController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\TownshipsController.cs" />
     <Compile Include="Controllers\UserAuthorizationFilter.cs" />
@@ -228,13 +230,27 @@
     <Compile Include="Migrations\202308071324405_AddSalePrice.designer.cs">
       <DependentUpon>202308071324405_AddSalePrice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308081111568_AddStocks.cs" />
+    <Compile Include="Migrations\202308081111568_AddStocks.designer.cs">
+      <DependentUpon>202308081111568_AddStocks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308100725116_UpdateModels.cs" />
+    <Compile Include="Migrations\202308100725116_UpdateModels.designer.cs">
+      <DependentUpon>202308100725116_UpdateModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AutoGenerate.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\City.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SalePrice.cs" />
     <Compile Include="Models\State.cs" />
+    <Compile Include="Models\StockBalance.cs" />
+    <Compile Include="Models\StockPurchase.cs" />
+    <Compile Include="Models\StockPurchaseDetail.cs" />
+    <Compile Include="Models\StockSale.cs" />
+    <Compile Include="Models\StockSaleDetail.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\Township.cs" />
     <Compile Include="Models\User.cs" />
@@ -247,6 +263,8 @@
     <Compile Include="ViewModels\ResetPasswordViewModel.cs" />
     <Compile Include="ViewModels\SalePriceDetailViewModel.cs" />
     <Compile Include="ViewModels\StateDetailViewModel.cs" />
+    <Compile Include="ViewModels\StockBalanceDetailViewModel.cs" />
+    <Compile Include="ViewModels\StockPurchaseViewModel.cs" />
     <Compile Include="ViewModels\SupplierDetailViewModel.cs" />
     <Compile Include="ViewModels\TownshipDetailViewModel.cs" />
     <Compile Include="ViewModels\UserDetailViewModel.cs" />
@@ -351,8 +369,16 @@
     <Content Include="Views\SalePrices\Create.cshtml" />
     <Content Include="Views\SalePrices\Delete.cshtml" />
     <Content Include="Views\SalePrices\Details.cshtml" />
-    <Content Include="Views\SalePrices\Edit.cshtml" />
     <Content Include="Views\SalePrices\Index.cshtml" />
+    <Content Include="Views\StockBalances\Create.cshtml" />
+    <Content Include="Views\StockBalances\Details.cshtml" />
+    <Content Include="Views\StockBalances\Edit.cshtml" />
+    <Content Include="Views\StockBalances\Index.cshtml" />
+    <Content Include="Views\StockPurchases\Create.cshtml" />
+    <Content Include="Views\StockPurchases\Details.cshtml" />
+    <Content Include="Views\StockPurchases\Edit.cshtml" />
+    <Content Include="Views\StockPurchases\Index.cshtml" />
+    <Content Include="Views\SalePrices\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -405,6 +431,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308071324405_AddSalePrice.resx">
       <DependentUpon>202308071324405_AddSalePrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308081111568_AddStocks.resx">
+      <DependentUpon>202308081111568_AddStocks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308100725116_UpdateModels.resx">
+      <DependentUpon>202308100725116_UpdateModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

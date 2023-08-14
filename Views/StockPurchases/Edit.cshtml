@@ -1,0 +1,282 @@
+﻿@model Inventory.ViewModels.StockPurchaseEditViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="container mt-2">
+    <h2>Edit Stock Purchase</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card">
+            <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @Html.HiddenFor(model => model.StockPurchaseId)
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        <label>Supplier:</label>
+                    </div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.SupplierId, ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        <label>Categories & Products:</label>
+                    </div>
+                    <div class="col-md-10">
+                        <table id="productTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Amount</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Products.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DropDownListFor(m => m.Products[i].CategoryId, ViewBag.Categories as SelectList, "Select Category", new { @class = "form-control category-dropdown", data_category_id = Model.Products[i].CategoryId })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => m.Products[i].ProductId, ViewBag.Products as SelectList, "Select Product", new { @class = "form-control product-dropdown", data_product_id = Model.Products[i].ProductId, data_price = Model.Products[i].Price })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.Products[i].Quantity, new { @class = "form-control quantity-input" })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.Products[i].Price, new { @class = "form-control price-input", @readonly = "readonly" })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(m => m.Products[i].Amount, new { @class = "form-control amount-input", @readonly = "readonly" })
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-remove">x</button>
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-primary btn-add">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        <label>Total Amount:</label>
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.TotalAmount, new { @id = "totalAmount", @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        <label>Discount Percent:</label>
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.DiscountPercent, new { @id = "discountPercent", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        <label>Discount Amount:</label>
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.DiscountAmount, new { @id = "discountAmount", @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <div class="col-md-2">
+                        <label>Net Amount:</label>
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.NetAmount, new { @id = "netAmount", @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="form-group row mt-2">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save Changes" class="btn btn-dark" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <p>
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "mt-2 btn btn-outline-dark" })
+    </p>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+
+        $('.category-dropdown').each(function () {
+            const categoryId = $(this).data('category-id'); // Get the product ID from data attribute
+            $(this).find('option[value="' + categoryId + '"]').prop('selected', true); // Set the selected option
+        });
+        $('.product-dropdown').each(function () {
+            const productId = $(this).data('product-id'); // Get the product ID from data attribute
+            $(this).find('option[value="' + productId + '"]').prop('selected', true); // Set the selected option
+        });
+
+        // Function to calculate individual product amounts
+        function updateAmounts(row) {
+            const quantity = parseFloat(row.find('.quantity-input').val()) || 0;
+            const price = parseFloat(row.find('.price-input').val()) || 0;
+            const amount = (quantity * price).toFixed(2);
+            row.find('.amount-input').val(amount);
+            return parseFloat(amount);
+        }
+
+        // Function to update total amount
+        function updateTotalAmount() {
+            let total = 0;
+            $('.quantity-input').each(function () {
+                total += updateAmounts($(this).closest('tr'));
+            });
+            $('#totalAmount').val(total.toFixed(2));
+        }
+
+        // Function to fetch products based on selected category
+        function fetchProducts(categoryDropdown, productDropdown) {
+            const selectedCategoryId = categoryDropdown.val();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetProductsByCategory", "StockPurchases")',
+                data: { categoryId: selectedCategoryId },
+                success: function (data) {
+                    productDropdown.empty();
+                    productDropdown.append($('<option></option>').val('').text('Select Product'));
+                    $.each(data, function (i, product) {
+                        productDropdown.append($('<option></option>').val(product.Value).html(product.Text));
+                    });
+                    updateTotalAmount(); // Update total amount when products change
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // Handle category selection change
+        $(document).on('change', '.category-dropdown', function () {
+            const selectedRow = $(this).closest('tr');
+            const productDropdown = selectedRow.find('.product-dropdown');
+            fetchProducts($(this), productDropdown);
+            const priceField = selectedRow.find('.price-input');
+            updateTotalAmount();
+
+        });
+
+        // Handle product selection change
+        $(document).on('change', '.product-dropdown', function () {
+            const selectedRow = $(this).closest('tr');
+            const priceField = selectedRow.find('.price-input');
+            updateTotalAmount();
+
+            // Fetch and update sale price based on selected category and product
+            const categoryValue = selectedRow.find('.category-dropdown').val();
+            const productValue = selectedRow.find('.product-dropdown').val();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetSalePriceByCategoryAndProduct", "StockPurchases")',
+                data: { categoryId: categoryValue, productId: productValue },
+                success: function (data) {
+                    // Update the price field with the fetched price
+                    priceField.val(data);
+                    updateTotalAmount(); // Update total amount after price change
+                    updateDiscountAndNetAmount();
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        // Handle quantity and price change
+        $(document).on('input', '.quantity-input, .price-input', function () {
+            const row = $(this).closest('tr');
+            updateAmounts(row);
+            updateTotalAmount();
+            updateDiscountAndNetAmount();
+        });
+
+        // Handle removing a product row
+        $(document).on('click', '.btn-remove', function () {
+            $(this).closest('tr').remove();
+            updateTotalAmount();
+            updateDiscountAndNetAmount();
+        });
+
+        let rowCount = 1; // Initialize the row count
+        // Handle adding a new product row
+        $('.btn-add').on('click', function () {
+            const newRow = $('#productTable tbody tr:first').clone();
+            newRow.find('.category-dropdown').val('');
+            newRow.find('.product-dropdown').val('');
+            newRow.find('.quantity-input').val('');
+            newRow.find('.price-input').val('');
+            newRow.find('.amount-input').val('');
+
+            // Update IDs and names with the new row index
+            newRow.find('.category-dropdown').attr('id', 'Products_' + rowCount + '_CategoryId');
+            newRow.find('.category-dropdown').attr('name', 'Products[' + rowCount + '].CategoryId');
+            newRow.find('.product-dropdown').attr('id', 'Products_' + rowCount + '_ProductId');
+            newRow.find('.product-dropdown').attr('name', 'Products[' + rowCount + '].ProductId');
+            newRow.find('.quantity-input').attr('id', 'Products_' + rowCount + '_Quantity');
+            newRow.find('.quantity-input').attr('name', 'Products[' + rowCount + '].Quantity');
+            newRow.find('.price-input').attr('id', 'Products_' + rowCount + '_Price');
+            newRow.find('.price-input').attr('name', 'Products[' + rowCount + '].Price');
+            newRow.find('.amount-input').attr('id', 'Products_' + rowCount + '_Amount');
+            newRow.find('.amount-input').attr('name', 'Products[' + rowCount + '].Amount');
+
+            $('#productTable tbody').append(newRow);
+            rowCount++;
+
+
+            updateTotalAmount();
+            updateDiscountAndNetAmount();
+        });
+
+        // Function to update discount amount and net amount
+        function updateDiscountAndNetAmount() {
+            const totalAmount = parseFloat($('#totalAmount').val()) || 0;
+            const discountPercent = parseFloat($('#discountPercent').val()) || 0;
+            const discountAmount = (totalAmount * discountPercent / 100).toFixed(2);
+            const netAmount = (totalAmount - discountAmount).toFixed(2);
+
+            $('#discountAmount').val(discountAmount);
+            $('#netAmount').val(netAmount);
+        }
+
+        // Handle discount percent change
+        $('#discountPercent').on('input', function () {
+            updateDiscountAndNetAmount();
+        });
+
+        // Initial calculations
+        updateTotalAmount();
+        updateDiscountAndNetAmount();
+
+
+    });
+    </script>
+
+}

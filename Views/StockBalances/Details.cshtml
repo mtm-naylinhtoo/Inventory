@@ -1,0 +1,78 @@
+﻿@model Inventory.ViewModels.StockBalanceDetailViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container mt-2">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4 class="card-title">Stock Balance Information</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Category:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.StockBalance.Category.Name)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Product:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.StockBalance.Product.Name)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Balance:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.StockBalance.Balance)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Created Date:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Html.DisplayFor(model => model.StockBalance.CreatedDate)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Created User:</label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.CreatedUserName</p>
+                </div>
+            </div>
+            @if (Model.StockBalance.UpdatedDate != null)
+            {
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Updated Date:</label>
+                    </div>
+                    <div class="col-md-8">
+                        <p>@Html.DisplayFor(model => model.StockBalance.UpdatedDate)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Updated User:</label>
+                    </div>
+                    <div class="col-md-8">
+                        <p>@Model.UpdatedUserName</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.StockBalance.ID }, new { @class = "btn btn-dark" }) |
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-dark" })
+    </p>
+</div>
