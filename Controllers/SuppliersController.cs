@@ -100,7 +100,7 @@ namespace Inventory.Controllers
             var currentUser = (User)Session["CurrentUser"];
             ViewBag.UserId = currentUser.Id;
             ViewBag.CreatedDate = DateTime.Now;
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name");
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name");
             ViewBag.CityId = new SelectList(Enumerable.Empty<City>(), "ID", "Name");
             ViewBag.TownshipId = new SelectList(Enumerable.Empty<Township>(), "ID", "Name");
             return View();
@@ -124,9 +124,9 @@ namespace Inventory.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", supplier.StateId);
-            ViewBag.CityId = new SelectList(db.Cities.Where(c => c.StateId == supplier.StateId), "ID", "Name", supplier.CityId);
-            ViewBag.TownshipId = new SelectList(db.Townships.Where(t => t.CityId == supplier.CityId), "ID", "Name", supplier.TownshipId);
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", supplier.StateId);
+            ViewBag.CityId = new SelectList(db.Cities.Where(x => !x.IsDeleted).Where(c => c.StateId == supplier.StateId), "ID", "Name", supplier.CityId);
+            ViewBag.TownshipId = new SelectList(db.Townships.Where(x => !x.IsDeleted).Where(t => t.CityId == supplier.CityId), "ID", "Name", supplier.TownshipId);
             return View(supplier);
         }
 
@@ -145,9 +145,9 @@ namespace Inventory.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", supplier.StateId);
-            ViewBag.CityId = new SelectList(db.Cities.Where(c => c.StateId == supplier.StateId), "ID", "Name", supplier.CityId);
-            ViewBag.TownshipId = new SelectList(db.Townships.Where(t => t.CityId == supplier.CityId), "ID", "Name", supplier.TownshipId);
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", supplier.StateId);
+            ViewBag.CityId = new SelectList(db.Cities.Where(x => !x.IsDeleted).Where(c => c.StateId == supplier.StateId), "ID", "Name", supplier.CityId);
+            ViewBag.TownshipId = new SelectList(db.Townships.Where(x => !x.IsDeleted).Where(t => t.CityId == supplier.CityId), "ID", "Name", supplier.TownshipId);
             return View(supplier);
         }
 
@@ -167,9 +167,9 @@ namespace Inventory.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", supplier.StateId);
-            ViewBag.CityId = new SelectList(db.Cities.Where(c => c.StateId == supplier.StateId), "ID", "Name", supplier.CityId);
-            ViewBag.TownshipId = new SelectList(db.Townships.Where(t => t.CityId == supplier.CityId), "ID", "Name", supplier.TownshipId);
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", supplier.StateId);
+            ViewBag.CityId = new SelectList(db.Cities.Where(x => !x.IsDeleted).Where(c => c.StateId == supplier.StateId), "ID", "Name", supplier.CityId);
+            ViewBag.TownshipId = new SelectList(db.Townships.Where(x => !x.IsDeleted).Where(t => t.CityId == supplier.CityId), "ID", "Name", supplier.TownshipId);
             return View(supplier);
         }
 
@@ -190,7 +190,7 @@ namespace Inventory.Controllers
             }
 
             // Fetch cities from the database based on the selected stateId
-            var cities = db.Cities
+            var cities = db.Cities.Where(x => !x.IsDeleted)
                 .Where(c => c.StateId == parsedStateId.ToString() && !c.IsDeleted)
                 .OrderBy(c => c.SortOrder)
                 .ToList();
@@ -222,7 +222,7 @@ namespace Inventory.Controllers
             }
 
             // Fetch townships from the database based on the selected cityId
-            var townships = db.Townships
+            var townships = db.Townships.Where(x => !x.IsDeleted)
                 .Where(t => t.CityId == parsedCityId.ToString() && !t.IsDeleted)
                 .OrderBy(t => t.SortOrder)
                 .ToList();

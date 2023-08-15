@@ -192,6 +192,7 @@
     <Compile Include="Controllers\StatesController.cs" />
     <Compile Include="Controllers\StockBalancesController.cs" />
     <Compile Include="Controllers\StockPurchasesController.cs" />
+    <Compile Include="Controllers\StockSalesController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\TownshipsController.cs" />
     <Compile Include="Controllers\UserAuthorizationFilter.cs" />
@@ -238,6 +239,10 @@
     <Compile Include="Migrations\202308100725116_UpdateModels.designer.cs">
       <DependentUpon>202308100725116_UpdateModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308150604481_UpdateStockSale.cs" />
+    <Compile Include="Migrations\202308150604481_UpdateStockSale.designer.cs">
+      <DependentUpon>202308150604481_UpdateStockSale.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AutoGenerate.cs" />
     <Compile Include="Models\Category.cs" />
@@ -265,6 +270,7 @@
     <Compile Include="ViewModels\StateDetailViewModel.cs" />
     <Compile Include="ViewModels\StockBalanceDetailViewModel.cs" />
     <Compile Include="ViewModels\StockPurchaseViewModel.cs" />
+    <Compile Include="ViewModels\StockSaleViewModel.cs" />
     <Compile Include="ViewModels\SupplierDetailViewModel.cs" />
     <Compile Include="ViewModels\TownshipDetailViewModel.cs" />
     <Compile Include="ViewModels\UserDetailViewModel.cs" />
@@ -379,6 +385,11 @@
     <Content Include="Views\StockPurchases\Edit.cshtml" />
     <Content Include="Views\StockPurchases\Index.cshtml" />
     <Content Include="Views\SalePrices\Edit.cshtml" />
+    <Content Include="Views\StockSales\Create.cshtml" />
+    <Content Include="Views\StockSales\Delete.cshtml" />
+    <Content Include="Views\StockSales\Details.cshtml" />
+    <Content Include="Views\StockSales\Edit.cshtml" />
+    <Content Include="Views\StockSales\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -437,6 +448,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308100725116_UpdateModels.resx">
       <DependentUpon>202308100725116_UpdateModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308150604481_UpdateStockSale.resx">
+      <DependentUpon>202308150604481_UpdateStockSale.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

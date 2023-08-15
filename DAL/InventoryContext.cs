@@ -112,6 +112,20 @@ namespace Inventory.DAL
                 .WithMany()
                 .HasForeignKey(c => c.ProductId)
                 .WillCascadeOnDelete(true);
+
+            // for StockSaleDetail
+
+            modelBuilder.Entity<StockSaleDetail>()
+                .HasRequired(c => c.Category)
+                .WithMany()
+                .HasForeignKey(c => c.CategoryId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StockSaleDetail>()
+                .HasRequired(c => c.Product)
+                .WithMany()
+                .HasForeignKey(c => c.ProductId)
+                .WillCascadeOnDelete(true);
         }
 
         public System.Data.Entity.DbSet<Inventory.Models.Customer> Customers { get; set; }

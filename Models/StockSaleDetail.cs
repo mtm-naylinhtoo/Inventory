@@ -32,5 +32,7 @@ namespace Inventory.Models
         public string UpdatedUserId { get; set; }
 
         public virtual StockSale StockSale { get; set; }
+        public virtual Category Category { get; set; } // Navigation property
+        public virtual Product Product { get; set; } // Navigation property
     }
 }

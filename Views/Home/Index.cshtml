@@ -2,32 +2,28 @@
     ViewBag.Title = "Home Page";
 }
 
-<main>
+<main class="animate__animated animate__fadeIn"">
     <section class="row" aria-labelledby="aspnetTitle">
         <h1 id="title">Inventory Management System</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+        <p class="lead">Welcome to the Inventory Management System!</p>
+        <p>This system provides tools to efficiently manage your inventory, handle stock purchases, track stock sales, and maintain stock balances.</p>
     </section>
 
-    <div class="row">
+    <div class="row my-xxl-5">
         <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            <h2 id="gettingStartedTitle">Stock Purchases</h2>
+            <p>Manage your stock inventory by purchasing new items. Keep track of suppliers, quantities, and costs.</p>
+            <p><a class="btn btn-outline-dark" href="/StockPurchases/Index">Go to Stock Purchases &raquo;</a></p>
         </section>
         <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+            <h2 id="librariesTitle">Stock Sales</h2>
+            <p>Sell your stock items and update your inventory. Record customer transactions and monitor profits.</p>
+            <p><a class="btn btn-outline-dark" href="/StockSales/Index">Go to Stock Sales &raquo;</a></p>
         </section>
         <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+            <h2 id="hostingTitle">Stock Balances</h2>
+            <p>Keep track of your stock balances to ensure accurate inventory management and financial reporting.</p>
+            <p><a class="btn btn-outline-dark" href="/StockBalances/Index">Go to Stock Balances &raquo;</a></p>
         </section>
     </div>
 </main>

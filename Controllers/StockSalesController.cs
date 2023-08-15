@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -14,46 +13,46 @@ using PagedList;
 
 namespace Inventory.Controllers
 {
-    public class StockPurchasesController : Controller
+    public class StockSalesController : Controller
     {
         private InventoryContext db = new InventoryContext();
 
-        // GET: StockPurchases
+        // GET: StockSales
         [UserAuthorizationFilter(CheckUserRole = false)]
         public ActionResult Index(string search, bool? showDeleted, int? page)
         {
             var currentUser = (User)Session["CurrentUser"];
             ViewBag.currentUser = currentUser;
 
-            var stockPurchases = db.StockPurchases.Include(sp => sp.Supplier);
+            var stockSales = db.StockSales.Include(ss => ss.Customer);
 
             if (!string.IsNullOrEmpty(search))
             {
-                stockPurchases = stockPurchases.Where(sp => sp.StockPurchaseNo.Contains(search) || sp.Supplier.Name.Contains(search));
+                stockSales = stockSales.Where(ss => ss.StockSaleNo.Contains(search) || ss.Customer.Name.Contains(search));
             }
 
             if (showDeleted.HasValue && showDeleted.Value)
             {
-                // If the checkbox is checked, do not filter by IsDeleted, show all stock purchases.
+                // If the checkbox is checked, do not filter by IsDeleted, show all stock sales.
             }
             else
             {
-                stockPurchases = stockPurchases.Where(sp => !sp.IsDeleted);
+                stockSales = stockSales.Where(ss => !ss.IsDeleted);
             }
 
             // Order by the CreatedDate column in descending order
-            stockPurchases = stockPurchases.OrderByDescending(sp => sp.CreatedDate);
+            stockSales = stockSales.OrderByDescending(ss => ss.CreatedDate);
 
             int pageSize = 10;
             int pageNumber = (page ?? 1);
 
-            var pagedStockPurchases = stockPurchases.ToPagedList(pageNumber, pageSize);
+            var pagedStockSales = stockSales.ToPagedList(pageNumber, pageSize);
 
-            return View(pagedStockPurchases);
+            return View(pagedStockSales);
         }
 
 
-        // GET: StockPurchases/Details/5
+        // GET: StockSales/Details/5
         [UserAuthorizationFilter(CheckUserRole = false)]
         public ActionResult Details(string id)
         {
@@ -62,21 +61,21 @@ namespace Inventory.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var stockPurchase = db.StockPurchases.Include(sp => sp.StockPurchaseDetails)
-                                                  .SingleOrDefault(sp => sp.ID == id);
+            var stockSale = db.StockSales.Include(ss => ss.StockSaleDetails)
+                                         .SingleOrDefault(ss => ss.ID == id);
 
-            if (stockPurchase == null)
+            if (stockSale == null)
             {
                 return HttpNotFound();
             }
 
-            var viewModel = new StockPurchaseDetailViewModel
+            var viewModel = new StockSaleDetailViewModel
             {
-                StockPurchase = stockPurchase,
-                CreatedUserName = GetUserNameById(stockPurchase.CreatedUserId),
-                UpdatedUserName = GetUserNameById(stockPurchase.UpdatedUserId),
-                DeletedUserName = GetUserNameById(stockPurchase.DeletedUserId),
-                StockPurchaseDetails = stockPurchase.StockPurchaseDetails.ToList()
+                StockSale = stockSale,
+                CreatedUserName = GetUserNameById(stockSale.CreatedUserId),
+                UpdatedUserName = GetUserNameById(stockSale.UpdatedUserId),
+                DeletedUserName = GetUserNameById(stockSale.DeletedUserId),
+                StockSaleDetails = stockSale.StockSaleDetails.ToList()
             };
 
             return View(viewModel);
@@ -97,18 +96,18 @@ namespace Inventory.Controllers
         [UserAuthorizationFilter(CheckUserRole = false)]
         public ActionResult Create()
         {
-            var viewModel = new StockPurchaseCreateViewModel
+            var viewModel = new StockSaleCreateViewModel
             {
-                Products = new List<StockPurchaseProductViewModel>
+                Products = new List<StockSaleProductViewModel>
         {
-            new StockPurchaseProductViewModel() // Initial row
+            new StockSaleProductViewModel() // Initial row
         }
             };
 
             var categories = db.Categories.Where(c => !c.IsDeleted).ToList();
             var products = db.Products.Where(p => !p.IsDeleted).ToList();
-            var suppliers = db.Suppliers.Where(p => !p.IsDeleted).ToList();
-            ViewBag.Suppliers = new SelectList(suppliers, "ID", "Name");
+            var customers = db.Customers.Where(p => !p.IsDeleted).ToList();
+            ViewBag.Customers = new SelectList(customers, "ID", "Name");
             ViewBag.Categories = new SelectList(categories, "ID", "Name");
             ViewBag.Products = new SelectList(products, "ID", "Name");
 
@@ -118,7 +117,7 @@ namespace Inventory.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [UserAuthorizationFilter(CheckUserRole = false)]
-        public ActionResult Create(StockPurchaseCreateViewModel viewModel)
+        public ActionResult Create(StockSaleCreateViewModel viewModel)
         {
             var currentUser = (User)Session["CurrentUser"];
             if (ModelState.IsValid)
@@ -128,19 +127,19 @@ namespace Inventory.Controllers
                 {
                     try
                     {
-                        var codePrefix = "P";
+                        var codePrefix = "S";
                         var serialNo = 1;
                         int Month = DateTime.Now.Month;
                         int Year = DateTime.Now.Year;
                         AutoGenerate lastAutoGenerate = db.AutoGenerates
-                                                        .Where(ag => ag.CodePrefix == "P")
+                                                        .Where(ag => ag.CodePrefix == "S")
                                                         .OrderByDescending(ag => ag.SerialNo)
                                                         .FirstOrDefault();
                         if (lastAutoGenerate != null)
                         {
                             serialNo = lastAutoGenerate.SerialNo + 1;
                         }
-                        var ItemNo = $"P{Year}{Month:D2}{serialNo.ToString("D5")}";
+                        var ItemNo = $"S{Year}{Month:D2}{serialNo.ToString("D5")}";
                         var autoGenerate = new AutoGenerate
                         {
                             ID = Guid.NewGuid().ToString(),
@@ -154,12 +153,12 @@ namespace Inventory.Controllers
                         };
                         db.AutoGenerates.Add(autoGenerate);
                         db.SaveChanges();
-                        var stockPurchase = new StockPurchase
+                        var stockSale = new StockSale
                         {
                             ID = Guid.NewGuid().ToString(),
-                            StockPurchaseNo = ItemNo,
+                            StockSaleNo = ItemNo,
                             Date = DateTime.Now,
-                            SupplierId = viewModel.SupplierId,
+                            CustomerId = viewModel.CustomerId,
                             TotalAmount = viewModel.TotalAmount,
                             DiscountPercent = viewModel.DiscountPercent,
                             DiscountAmount = viewModel.DiscountAmount,
@@ -168,15 +167,15 @@ namespace Inventory.Controllers
                             CreatedDate = DateTime.Now,
                             CreatedUserId = currentUser.Id
                         };
-                        db.StockPurchases.Add(stockPurchase);
+                        db.StockSales.Add(stockSale);
                         db.SaveChanges();
 
                         foreach (var detail in viewModel.Products)
                         {
-                            var stockPurchaseDetail = new StockPurchaseDetail
+                            var stockSaleDetail = new StockSaleDetail
                             {
                                 ID = Guid.NewGuid().ToString(),
-                                StockPurchaseId = stockPurchase.ID,
+                                StockSaleId = stockSale.ID,
                                 CategoryId = detail.CategoryId,
                                 ProductId = detail.ProductId,
                                 Quantity = detail.Quantity,
@@ -185,7 +184,7 @@ namespace Inventory.Controllers
                                 CreatedDate = DateTime.Now,
                                 CreatedUserId = currentUser.Id
                             };
-                            db.StockPurchaseDetails.Add(stockPurchaseDetail);
+                            db.StockSaleDetails.Add(stockSaleDetail);
 
                             //Update or create StockBalance entry
                             var stockBalance = db.StockBalances.FirstOrDefault(sb =>
@@ -197,7 +196,7 @@ namespace Inventory.Controllers
                                     ID = Guid.NewGuid().ToString(),
                                     CategoryId = detail.CategoryId,
                                     ProductId = detail.ProductId,
-                                    Balance = detail.Quantity,
+                                    Balance = detail.Quantity * -1,
                                     CreatedDate = DateTime.Now,
                                     CreatedUserId = currentUser.Id
                                 };
@@ -205,7 +204,7 @@ namespace Inventory.Controllers
                             }
                             else
                             {
-                                stockBalance.Balance += detail.Quantity;
+                                stockBalance.Balance -= detail.Quantity;
                                 stockBalance.UpdatedDate = DateTime.Now;
                                 stockBalance.UpdatedUserId = currentUser.Id;
                             }
@@ -213,7 +212,7 @@ namespace Inventory.Controllers
                         db.SaveChanges();
 
                         transaction.Commit();
-                        return RedirectToAction("Index", "StockPurchases");
+                        return RedirectToAction("Index", "StockSales");
                     }
                     catch (Exception e)
                     {
@@ -225,15 +224,15 @@ namespace Inventory.Controllers
 
             var categories = db.Categories.Where(c => !c.IsDeleted).ToList();
             var products = db.Products.Where(p => !p.IsDeleted).ToList();
-            var suppliers = db.Suppliers.Where(p => !p.IsDeleted).ToList();
-            ViewBag.Suppliers = new SelectList(suppliers, "ID", "Name");
+            var customers = db.Customers.Where(p => !p.IsDeleted).ToList();
+            ViewBag.Customers = new SelectList(customers, "ID", "Name");
             ViewBag.Categories = new SelectList(categories, "ID", "Name");
             ViewBag.Products = new SelectList(products, "ID", "Name");
             return View(viewModel);
         }
 
 
-        // GET: StockPurchases/Edit/5
+        // GET: StockSales/Edit/5
         [UserAuthorizationFilter(CheckUserRole = false)]
         public ActionResult Edit(string id)
         {
@@ -242,26 +241,26 @@ namespace Inventory.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var stockPurchase = db.StockPurchases
-                .Include(sp => sp.StockPurchaseDetails)
+            var stockSale = db.StockSales
+                .Include(sp => sp.StockSaleDetails)
                 .SingleOrDefault(sp => sp.ID == id);
 
-            if (stockPurchase == null)
+            if (stockSale == null)
             {
                 return HttpNotFound();
             }
 
-            var viewModel = new StockPurchaseEditViewModel
+            var viewModel = new StockSaleEditViewModel
             {
-                StockPurchase = stockPurchase,
-                StockPurchaseId = stockPurchase.ID,
-                SupplierId = stockPurchase.SupplierId,
-                TotalAmount = stockPurchase.TotalAmount,
-                DiscountPercent = stockPurchase.DiscountPercent,
-                DiscountAmount = stockPurchase.DiscountAmount,
-                NetAmount = stockPurchase.NetAmount,
-                Remark = stockPurchase.Remark,
-                Products = stockPurchase.StockPurchaseDetails.Select(detail => new StockPurchaseProductViewModel
+                StockSale = stockSale,
+                StockSaleId = stockSale.ID,
+                CustomerId = stockSale.CustomerId,
+                TotalAmount = stockSale.TotalAmount,
+                DiscountPercent = stockSale.DiscountPercent,
+                DiscountAmount = stockSale.DiscountAmount,
+                NetAmount = stockSale.NetAmount,
+                Remark = stockSale.Remark,
+                Products = stockSale.StockSaleDetails.Select(detail => new StockSaleProductViewModel
                 {
                     CategoryId = detail.CategoryId,
                     ProductId = detail.ProductId,
@@ -273,8 +272,8 @@ namespace Inventory.Controllers
 
             var categories = db.Categories.Where(c => !c.IsDeleted).ToList();
             var products = db.Products.Where(p => !p.IsDeleted).ToList();
-            var suppliers = db.Suppliers.Where(p => !p.IsDeleted).ToList();
-            ViewBag.Suppliers = new SelectList(suppliers, "ID", "Name");
+            var customers = db.Customers.Where(p => !p.IsDeleted).ToList();
+            ViewBag.Customers = new SelectList(customers, "ID", "Name");
             ViewBag.Categories = new SelectList(categories, "ID", "Name");
             ViewBag.Products = new SelectList(products, "ID", "Name");
 
@@ -284,7 +283,7 @@ namespace Inventory.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [UserAuthorizationFilter(CheckUserRole = false)]
-        public ActionResult Edit(StockPurchaseEditViewModel viewModel)
+        public ActionResult Edit(StockSaleEditViewModel viewModel)
         {
             var currentUser = (User)Session["CurrentUser"];
             if (ModelState.IsValid)
@@ -293,28 +292,28 @@ namespace Inventory.Controllers
                 {
                     try
                     {
-                        var stockPurchase = db.StockPurchases
-                            .Include(sp => sp.StockPurchaseDetails)
-                            .SingleOrDefault(sp => sp.ID == viewModel.StockPurchaseId);
+                        var stockSale = db.StockSales
+                            .Include(sp => sp.StockSaleDetails)
+                            .SingleOrDefault(sp => sp.ID == viewModel.StockSaleId);
 
-                        if (stockPurchase == null)
+                        if (stockSale == null)
                         {
                             return HttpNotFound();
                         }
 
-                        stockPurchase.SupplierId = viewModel.SupplierId;
-                        stockPurchase.TotalAmount = viewModel.TotalAmount;
-                        stockPurchase.DiscountPercent = viewModel.DiscountPercent;
-                        stockPurchase.DiscountAmount = viewModel.DiscountAmount;
-                        stockPurchase.NetAmount = viewModel.NetAmount;
-                        stockPurchase.Remark = viewModel.Remark;
-                        stockPurchase.UpdatedDate = DateTime.Now;
-                        stockPurchase.UpdatedUserId = currentUser.Id;
+                        stockSale.CustomerId = viewModel.CustomerId;
+                        stockSale.TotalAmount = viewModel.TotalAmount;
+                        stockSale.DiscountPercent = viewModel.DiscountPercent;
+                        stockSale.DiscountAmount = viewModel.DiscountAmount;
+                        stockSale.NetAmount = viewModel.NetAmount;
+                        stockSale.Remark = viewModel.Remark;
+                        stockSale.UpdatedDate = DateTime.Now;
+                        stockSale.UpdatedUserId = currentUser.Id;
 
-                        // Update StockPurchaseDetails
+                        // Update StockSaleDetails
                         foreach (var detail in viewModel.Products)
                         {
-                            var existingDetail = stockPurchase.StockPurchaseDetails
+                            var existingDetail = stockSale.StockSaleDetails
                                 .SingleOrDefault(d => d.CategoryId == detail.CategoryId && d.ProductId == detail.ProductId);
 
                             if (existingDetail != null)
@@ -329,7 +328,7 @@ namespace Inventory.Controllers
                                         ID = Guid.NewGuid().ToString(),
                                         CategoryId = detail.CategoryId,
                                         ProductId = detail.ProductId,
-                                        Balance = detail.Quantity,
+                                        Balance = detail.Quantity * -1,
                                         CreatedDate = DateTime.Now,
                                         CreatedUserId = currentUser.Id
                                     };
@@ -338,7 +337,7 @@ namespace Inventory.Controllers
                                 else
                                 {
                                     var balanceToUpdate = detail.Quantity - existingDetail.Quantity;
-                                    stockBalance.Balance += balanceToUpdate;
+                                    stockBalance.Balance -= balanceToUpdate;
                                     stockBalance.UpdatedDate = DateTime.Now;
                                     stockBalance.UpdatedUserId = currentUser.Id;
                                 }
@@ -353,10 +352,10 @@ namespace Inventory.Controllers
                             }
                             else
                             {
-                                var newDetail = new StockPurchaseDetail
+                                var newDetail = new StockSaleDetail
                                 {
                                     ID = Guid.NewGuid().ToString(),
-                                    StockPurchaseId = stockPurchase.ID,
+                                    StockSaleId = stockSale.ID,
                                     CategoryId = detail.CategoryId,
                                     ProductId = detail.ProductId,
                                     Quantity = detail.Quantity,
@@ -365,7 +364,7 @@ namespace Inventory.Controllers
                                     CreatedDate = DateTime.Now,
                                     CreatedUserId = currentUser.Id
                                 };
-                                db.StockPurchaseDetails.Add(newDetail);
+                                db.StockSaleDetails.Add(newDetail);
 
                                 //Update or create StockBalance entry
                                 var stockBalance = db.StockBalances.FirstOrDefault(sb =>
@@ -377,7 +376,7 @@ namespace Inventory.Controllers
                                         ID = Guid.NewGuid().ToString(),
                                         CategoryId = detail.CategoryId,
                                         ProductId = detail.ProductId,
-                                        Balance = detail.Quantity,
+                                        Balance = detail.Quantity * -1,
                                         CreatedDate = DateTime.Now,
                                         CreatedUserId = currentUser.Id
                                     };
@@ -385,14 +384,14 @@ namespace Inventory.Controllers
                                 }
                                 else
                                 {
-                                    stockBalance.Balance += detail.Quantity;
+                                    stockBalance.Balance -= detail.Quantity;
                                     stockBalance.UpdatedDate = DateTime.Now;
                                     stockBalance.UpdatedUserId = currentUser.Id;
                                 }
                             }
                         }
                         // Remove existing details that are not included in the viewModel.Products
-                        var existingDetailsToRemove = stockPurchase.StockPurchaseDetails
+                        var existingDetailsToRemove = stockSale.StockSaleDetails
                             .Where(existingDetail => !viewModel.Products.Any(detail =>
                                 detail.CategoryId == existingDetail.CategoryId && detail.ProductId == existingDetail.ProductId))
                             .ToList();
@@ -405,17 +404,17 @@ namespace Inventory.Controllers
                                 sb.CategoryId == detailToRemove.CategoryId && sb.ProductId == detailToRemove.ProductId);
                             if (stockBalance != null)
                             {
-                                stockBalance.Balance -= detailToRemove.Quantity;
+                                stockBalance.Balance += detailToRemove.Quantity;
                                 stockBalance.UpdatedDate = DateTime.Now;
                                 stockBalance.UpdatedUserId = currentUser.Id;
                             }
 
-                            db.StockPurchaseDetails.Remove(detailToRemove);
+                            db.StockSaleDetails.Remove(detailToRemove);
                         }
 
                         db.SaveChanges();
                         transaction.Commit();
-                        return RedirectToAction("Index", "StockPurchases");
+                        return RedirectToAction("Index", "StockSales");
                     }
                     catch (Exception e)
                     {
@@ -424,17 +423,16 @@ namespace Inventory.Controllers
                     }
                 }
             }
-            var test = ModelState.Values;
             var categories = db.Categories.Where(c => !c.IsDeleted).ToList();
             var products = db.Products.Where(p => !p.IsDeleted).ToList();
-            var suppliers = db.Suppliers.Where(p => !p.IsDeleted).ToList();
-            ViewBag.Suppliers = new SelectList(suppliers, "ID", "Name");
+            var customers = db.Customers.Where(p => !p.IsDeleted).ToList();
+            ViewBag.Customers = new SelectList(customers, "ID", "Name");
             ViewBag.Categories = new SelectList(categories, "ID", "Name");
             ViewBag.Products = new SelectList(products, "ID", "Name");
             return View(viewModel);
         }
 
-        // POST: StockPurchases/Delete/5
+        // POST: StockSales/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
@@ -445,23 +443,23 @@ namespace Inventory.Controllers
                 {
                     var currentUser = (User)Session["CurrentUser"];
 
-                    // Find the StockPurchase
-                    var stockPurchase = db.StockPurchases
-                        .Include(sp => sp.StockPurchaseDetails)
+                    // Find the StockSale
+                    var stockSale = db.StockSales
+                        .Include(sp => sp.StockSaleDetails)
                         .SingleOrDefault(sp => sp.ID == id);
 
-                    if (stockPurchase == null)
+                    if (stockSale == null)
                     {
                         return HttpNotFound();
                     }
 
-                    // Update StockPurchase
-                    stockPurchase.IsDeleted = true;
-                    stockPurchase.DeletedDate = DateTime.Now;
-                    stockPurchase.DeletedUserId = currentUser.Id;
+                    // Update StockSale
+                    stockSale.IsDeleted = true;
+                    stockSale.DeletedDate = DateTime.Now;
+                    stockSale.DeletedUserId = currentUser.Id;
 
-                    // Update StockPurchaseDetails and adjust stock balance
-                    foreach (var detail in stockPurchase.StockPurchaseDetails)
+                    // Update StockSaleDetails and adjust stock balance
+                    foreach (var detail in stockSale.StockSaleDetails)
                     {
                         // Find the corresponding stock balance
                         var stockBalance = db.StockBalances
@@ -469,7 +467,7 @@ namespace Inventory.Controllers
 
                         if (stockBalance != null)
                         {
-                            stockBalance.Balance -= detail.Quantity;
+                            stockBalance.Balance += detail.Quantity;
                         }
                     }
 

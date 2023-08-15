@@ -97,7 +97,7 @@ namespace Inventory.Controllers
         [UserAuthorizationFilter]
         public ActionResult Create()
         {
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name");
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name");
             ViewBag.CityId = new SelectList(Enumerable.Empty<City>(), "ID", "Name");
             return View();
         }
@@ -120,8 +120,8 @@ namespace Inventory.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", township.StateId);
-            ViewBag.CityId = new SelectList(db.Cities.Where(c => c.StateId == township.StateId), "ID", "Name");
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", township.StateId);
+            ViewBag.CityId = new SelectList(db.Cities.Where(x => !x.IsDeleted).Where(c => c.StateId == township.StateId), "ID", "Name");
             return View(township);
         }
 
@@ -140,8 +140,8 @@ namespace Inventory.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", township.StateId);
-            ViewBag.CityId = new SelectList(db.Cities.Where(c => c.StateId == township.StateId), "ID", "Name", township.CityId);
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", township.StateId);
+            ViewBag.CityId = new SelectList(db.Cities.Where(x => !x.IsDeleted).Where(c => c.StateId == township.StateId), "ID", "Name", township.CityId);
             return View(township);
         }
 
@@ -161,8 +161,8 @@ namespace Inventory.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", township.StateId);
-            ViewBag.CityId = new SelectList(db.Cities.Where(c => c.StateId == township.StateId), "ID", "Name", township.CityId);
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", township.StateId);
+            ViewBag.CityId = new SelectList(db.Cities.Where(x => !x.IsDeleted).Where(c => c.StateId == township.StateId), "ID", "Name", township.CityId);
             return View(township);
         }
         // GET: Townships/GetCitiesByState
@@ -182,7 +182,7 @@ namespace Inventory.Controllers
             }
 
             // Fetch cities from the database based on the selected stateId
-            var cities = db.Cities
+            var cities = db.Cities.Where(x => !x.IsDeleted)
                 .Where(c => c.StateId == parsedStateId.ToString() && !c.IsDeleted)
                 .OrderBy(c => c.SortOrder)
                 .ToList();

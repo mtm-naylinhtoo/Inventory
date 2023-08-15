@@ -97,7 +97,7 @@ namespace Inventory.Controllers
         [UserAuthorizationFilter]
         public ActionResult Create()
         {
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name");
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name");
             return View();
         }
 
@@ -119,7 +119,7 @@ namespace Inventory.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", city.StateId);
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", city.StateId);
             return View(city);
         }
 
@@ -138,7 +138,7 @@ namespace Inventory.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", city.StateId);
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", city.StateId);
             return View(city);
         }
 
@@ -158,7 +158,7 @@ namespace Inventory.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StateId = new SelectList(db.States, "ID", "Name", city.StateId);
+            ViewBag.StateId = new SelectList(db.States.Where(x => !x.IsDeleted), "ID", "Name", city.StateId);
             return View(city);
         }
 

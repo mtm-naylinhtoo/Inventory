@@ -45,6 +45,7 @@ namespace Inventory.Models
         public DateTime? DeletedDate { get; set; }
         public string DeletedUserId { get; set; }
 
+        public virtual ICollection<StockSaleDetail> StockSaleDetails { get; set; }
         public virtual Customer Customer { get; set; }
     }
 }

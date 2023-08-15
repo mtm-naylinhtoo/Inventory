@@ -11,17 +11,19 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Include Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
         a {
             color: black;
             text-decoration: none;
         }
 
-        a:hover {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+            a:hover {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
 
         .black-pagination .page-item .page-link {
             color: black;
@@ -55,56 +57,65 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            @Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link custom-link" })
+                            @Html.ActionLink("Purchases", "Index", "StockPurchases", new { area = "" }, new { @class = "nav-link custom-link" })
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Purchase", "Index", "StockPurchases", new { area = "" }, new { @class = "nav-link custom-link" })
+                            @Html.ActionLink("Sales", "Index", "StockSales", new { area = "" }, new { @class = "nav-link custom-link" })
                         </li>
-                        <li class="nav-item">
-                            <div class="dropdown">
-                                <button class="btn btn-dark dropdown-toggle pt-2" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Settings
-                                </button>
-                                <ul class="dropdown-menu" id="navDropdownMenu" aria-labelledby="menuDropdown">
-                                    <li>
-                                        @Html.ActionLink("States", "Index", "States", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Cities", "Index", "Cities", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Townships", "Index", "Townships", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Suppliers", "Index", "Suppliers", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Customers", "Index", "Customers", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="dropdown">
-                                <button class="btn btn-dark dropdown-toggle pt-2" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Stock
-                                </button>
-                                <ul class="dropdown-menu" id="navDropdownMenu" aria-labelledby="menuDropdown">
-                                    <li>
-                                        @Html.ActionLink("Categories", "Index", "Categories", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Products", "Index", "Products", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Sale Prices", "Index", "SalePrices", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Stock Balance", "Index", "StockBalances", new { area = "" }, new { @class = "dropdown-item custom-btn" })
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
+                        @if (currentUser.Role == 0)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "nav-link custom-link" })
+                            </li>
+                        }
+                        @if (currentUser.Role == 0)
+                        {
+                            <li class="nav-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle pt-2" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Settings
+                                    </button>
+                                    <ul class="dropdown-menu" id="navDropdownMenu" aria-labelledby="menuDropdown">
+                                        <li>
+                                            @Html.ActionLink("States", "Index", "States", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                        <li>
+                                            @Html.ActionLink("Cities", "Index", "Cities", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                        <li>
+                                            @Html.ActionLink("Townships", "Index", "Townships", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                        <li>
+                                            @Html.ActionLink("Suppliers", "Index", "Suppliers", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                        <li>
+                                            @Html.ActionLink("Customers", "Index", "Customers", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-dark dropdown-toggle pt-2" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Stock
+                                    </button>
+                                    <ul class="dropdown-menu" id="navDropdownMenu" aria-labelledby="menuDropdown">
+                                        <li>
+                                            @Html.ActionLink("Categories", "Index", "Categories", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                        <li>
+                                            @Html.ActionLink("Products", "Index", "Products", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                        <li>
+                                            @Html.ActionLink("Sale Prices", "Index", "SalePrices", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                        <li>
+                                            @Html.ActionLink("Stock Balances", "Index", "StockBalances", new { area = "" }, new { @class = "dropdown-item custom-btn" })
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        }
                     </ul>
 
                 </div>
@@ -140,7 +151,7 @@
             }
         </div>
     </nav>
-    <div class="container body-content mt-4">
+    <div class="container body-content mt-4 animate__animated animate__fadeIn">
         @RenderBody()
         <hr />
         <footer>
@@ -158,7 +169,7 @@
 
     $("#navDropdownMenu a").each(function () {
         var href = $(this).attr("href");
-        if (href && currentUrl!='/' && href.includes(currentUrl)) {
+        if (href && currentUrl != '/' && href.includes(currentUrl)) {
             $(this).parent("li").addClass("settings-active");
         }
     });
